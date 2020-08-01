@@ -20,7 +20,7 @@ This installs the version currently shipped with your distribution. For an up-to
 
 Rename your fresh Ubuntu image download to `/root/ubuntu.iso`.
 
-As user root, perform the following steps, or run `setup_vbox.sh`. The steps below use the same values for RAM/VRAM/DISK size as setup_vbox.sh.
+As user root, perform the following steps, or run `setup_vbox.sh`. The steps below use the same values for RAM/VRAM/DISK size as the script.
 You can modify these to fit your needs.
 
 ```
@@ -34,7 +34,7 @@ VBoxManage createvm --name $MACHINENAME --ostype "Ubuntu_64" --register --basefo
 VBoxManage modifyvm $MACHINENAME --ioapic on
 VBoxManage modifyvm $MACHINENAME --memory 8096 --vram 256
 VBoxManage modifyvm $MACHINENAME --nic1 nat
-#Create Disk and connect Debian Iso
+#Create Disk and connect ubuntu install image
 VBoxManage createhd --filename `pwd`/$MACHINENAME/$MACHINENAME_DISK.vdi --size 80000 --format VDI
 VBoxManage storagectl $MACHINENAME --name "SATA Controller" --add sata --controller IntelAhci
 VBoxManage storageattach $MACHINENAME --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium  `pwd`/$MACHINENAME/$MACHINENAME_DISK.vdi
