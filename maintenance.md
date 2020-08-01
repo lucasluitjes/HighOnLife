@@ -4,6 +4,8 @@
 
 VM Snapshots allow you to save a specific state of your VM to a file and restore it later.
 
+Snapshots are stored in the "Machine Folder". For a default HighOnLife setup this is `/root/vbox/HighOnLife/Snapshots`.
+
 ## Creating
 
 Create a VBox snapshot using the following command:
