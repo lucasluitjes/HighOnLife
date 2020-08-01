@@ -7,7 +7,7 @@ See chapter "VirtualBox 6" on how to use a more up to date VirtualBox.
 
 We'll be using Ubuntu as guest os. Get the download link from https://ubuntu.com/download/desktop
 
-We'll also need VirtualBox Extension Pack. Get the download link here: https://www.virtualbox.org/wiki/Download_Old_Builds_5_2
+We'll also need VirtualBox Extension Pack. Get the download link here: https://www.virtualbox.org/wiki/Download_Old_Builds_5_2 (Note that this download link is for 5.2 only. Download recent ext-pack if you're using VirtualBox 6)
 
 Download both files onto your host OS using `wget`.
 
