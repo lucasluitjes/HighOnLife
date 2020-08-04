@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+running = `VBoxManage list runningvms -l`.strip.split(/^Name: /).reject(&:empty?)
+name = running.find {|n| n.include?('VRDE property: TCP/Ports  = "10194"')}
+name = name.split("\n").first.strip if name
+
+if name
+  puts "Current VM on port 10194 is named #{name}.\nDo you want to suspend it and finish preparation? [y,n]"
+  if gets.strip == 'y'
+    puts `VBoxManage controlvm #{name} vrdeport 10001`
+    puts `VBoxManage controlvm #{name} savestate`
+    puts "\n\nFinished!"
+  else
+    puts "Exiting..."
+    exit!
+  end
+else
+  puts "ERROR: No VM running on port 10194!"
+  exit!
+end

@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+
+running = `VBoxManage list runningvms -l`.strip.split(/^Name: /).reject(&:empty?)
+vm_running_on_port_10001 = running.find {|n| n.include?('VRDE property: TCP/Ports  = "10001"')}
+vm_running_on_port_10001 = vm_running_on_port_10001.split("\n").first.strip if vm_running_on_port_10001
+
+if vm_running_on_port_10001
+  puts "ERROR: A VM named #{vm_running_on_port_10001} is still running on port 10001.\nDid you forget to run `finish_reading` or `pause_reading`?"
+  exit!
+end
+
+vms_ready = `VBoxManage list vms -l`.strip.split(/^Name: /).reject(&:empty?).select do |vm|
+  !vm.empty? &&
+  vm =~ /^State: +saved \(since/ &&
+  vm.include?('VRDE property: TCP/Ports  = "10001"')
+end.map {|vm| vm.split("\n").first.strip }
+
+if vms_ready.empty?
+  puts "ERROR: No VM's ready!"
+  exit!
+end
+
+puts "Found the following vm's:"
+vms_ready.each_with_index do |vm, i|
+  puts "#{i + 1}: #{vm}"
+end
+puts "Enter the number of the VM you would like to start, and press enter."
+print "> "
+
+vm = vms_ready[gets.strip.to_i - 1]
+
+puts "Starting #{vm}...\n\n"
+puts `VBoxManage startvm #{vm} --type headless`

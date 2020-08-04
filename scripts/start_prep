@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+
+running = `VBoxManage list runningvms -l`.strip.split(/^Name: /).reject(&:empty?)
+vm_running_on_port_10194 = running.find {|n| n.include?('VRDE property: TCP/Ports  = "10194"')}
+vm_running_on_port_10194 = vm_running_on_port_10194.split("\n").first.strip if vm_running_on_port_10194
+
+if vm_running_on_port_10194
+  puts "ERROR: A VM named #{vm_running_on_port_10194} is still running on port 10194, did you forget to run `finish_prep`?"
+  exit!
+end
+
+puts "Please enter a descriptive name, and press enter.\nYou can use lowercase, uppercase, numbers, dashes and underscores."
+print "> "
+name = gets.strip
+
+if name != name.gsub(/[^a-zA-Z0-9\-_]/,'')
+  puts "ERROR: #{name.inspect} contains characters that are not allowed.\nExiting..."
+  exit!
+end
+
+if `VBoxManage list vms`.scan(/^"(.*?)" /).flatten.include?(name)
+  puts "ERROR: the name #{name.inspect} is already taken.\nExiting..."
+  exit!
+end
+
+puts "Creating VM '#{name}'... (this usually takes between 60 and 90 seconds)\n\n"
+puts `VBoxManage import --vsys 0 --vmname #{name} /root/vbox/baseline.ova`
+puts `VBoxManage modifyvm #{name} --vrdeport 10194`
+puts `VBoxManage startvm #{name} --type=headless`
+puts "\n\nFinished!\n\nVM is running on port 10194."
